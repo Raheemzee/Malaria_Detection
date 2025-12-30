@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HematoVision AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black text-gray-200 min-h-screen">
+
+<!-- Header -->
+<header class="border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+        <h1 class="text-3xl font-bold text-white">🧬 HematoVision AI</h1>
+        <p class="text-gray-400">Blood cell analysis & malaria parasite detection</p>
+    </div>
+</header>
+
+<!-- Main -->
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- Upload Card -->
+    <div class="bg-gray-900 rounded-xl p-6 shadow-lg mb-10 border border-gray-800">
+        <h2 class="text-xl font-semibold mb-4 text-white">Upload Images</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            <!-- Mode -->
+            <div class="mb-4">
+                <label class="text-sm text-gray-400">Analysis Mode</label>
+                <select name="mode" class="w-full mt-1 bg-black border border-gray-700 rounded-lg p-2 text-white">
+                    <option value="blood">Blood Cell Classification & Counting</option>
+                    <option value="malaria">Malaria Parasite Detection</option>
+                </select>
+            </div>
+
+            <!-- File Upload -->
+            <input
+                type="file"
+                name="files"
+                multiple
+                required
+                class="block w-full mb-4 text-sm text-gray-400
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-lg file:border-0
+                       file:bg-red-600 file:text-white
+                       hover:file:bg-red-700"
+            >
+
+            <button
+                type="submit"
+                class="bg-red-600 px-6 py-2 rounded-lg text-white font-semibold hover:bg-red-700 transition"
+            >
+                Run Analysis
+            </button>
+        </form>
+    </div>
+
+    <!-- Results -->
+    {% if results %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for r in results %}
+        <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden shadow">
+            <img src="{{ r.processed_image }}" class="w-full h-60 object-contain bg-black">
+
+            <div class="p-4">
+                <h3 class="font-semibold text-white">{{ r.filename }}</h3>
+
+                {% if r.type == "blood" %}
+                    <div class="mt-2 text-sm text-gray-300">
+                        {% for cell, count in r.cell_counts.items() %}
+                            <p>{{ cell }}: <span class="text-white font-semibold">{{ count }}</span></p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if r.type == "malaria" %}
+                    <p class="mt-2 text-sm">
+                        Parasites Detected:
+                        <span class="text-white font-bold">{{ r.parasites }}</span>
+                    </p>
+                    <p class="text-sm">
+                        Risk Level:
+                        <span class="
+                            {% if r.risk == 'High' %}text-red-500
+                            {% elif r.risk == 'Moderate' %}text-yellow-400
+                            {% else %}text-green-400{% endif %}
+                            font-semibold
+                        ">
+                            {{ r.risk }}
+                        </span>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</main>
+
+<!-- Footer -->
+<footer class="text-center text-gray-500 text-sm py-6 border-t border-gray-800">
+    © 2025 HematoVision AI · Computer Vision for Medical Screening
+</footer>
+
+</body>
+</html>
