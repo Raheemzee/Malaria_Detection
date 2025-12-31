@@ -3,6 +3,3 @@ gunicorn
 opencv-python-headless
 numpy
 werkzeug
-fastai
-gdown
-ipython
