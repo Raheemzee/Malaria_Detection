@@ -40,7 +40,7 @@ def detect_malaria_parasites(image_path, filename):
     parasite_count = 0
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if 1 < area < 300:
+        if 1 < area < 500:
             parasite_count += 1
             x, y, w, h = cv2.boundingRect(cnt)
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
